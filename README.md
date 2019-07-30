@@ -15,6 +15,4 @@ Clarity fights the perception of clutter, leaving you with more headspace for ot
 * 3/4 cup olive oil
 * 1 tsp apple cider vinegar
 
-* Mix marinade
-* Steak in marinade  90mins-up to 4hours
-* Grill on medium-high heat 4-6 mins per side
+Mix marinade. Put steak in marinade 90mins-up to 4hours. Grill on medium-high heat 4-6 mins per side.
