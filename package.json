@@ -18,6 +18,7 @@
     "@jupyterlab/filebrowser": "^1.0.1",
     "@jupyterlab/launcher": "^1.0.1",
     "@jupyterlab/mainmenu": "^1.0.1",
+    "@jupyterlab/mathjax2": "^1.0.0",
     "@jupyterlab/notebook": "^1.0.1",
     "@jupyterlab/observables": "^2.2.0",
     "@jupyterlab/rendermime": "^1.0.1",

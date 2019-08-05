@@ -1,9 +1,5 @@
 import '@jupyterlab/application/style/index.css';
 import '@jupyterlab/theme-light-extension/style/index.css';
-import { JupyterFrontEndPlugin } from '@jupyterlab/application';
-/**
- * Export the plugins as default.
- */
-declare const plugins: JupyterFrontEndPlugin<any>[];
-export default plugins;
-export declare function main(): void;
+import '@jupyterlab/notebook/style/index.css';
+import '@jupyterlab/ui-components/style/index.css';
+import '@jupyterlab/notebook/style/base.css';
