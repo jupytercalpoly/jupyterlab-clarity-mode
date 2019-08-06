@@ -1,7 +1,7 @@
 import os
 import jinja2
 from jupyter_server.extension.application import ExtensionApp
-from .handler import MyExtHandler, MyExtHandler2, ErrorHandler
+from .handler import MyExtHandler, PathHandler, ErrorHandler
 
 HERE = os.path.dirname(__file__)
 
@@ -27,7 +27,7 @@ class Clarity(ExtensionApp):
         # Add a group with () to send to handler.
         self.handlers.extend([
             (r'/clarity/?', MyExtHandler),
-            (r'/clarity/page1/(.*)', MyExtHandler2),
+            (r'/clarity/path/(.*)', PathHandler),
             (r'/clarity/(.*)', ErrorHandler)
         ])
                     

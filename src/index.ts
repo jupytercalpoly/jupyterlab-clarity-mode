@@ -50,7 +50,6 @@ export class NbWidget extends Widget{
     this.nbWidget = nbWidget;
     this.addCommands();
     this.addShortcuts();
-    console.log(this.commands);
     layout.addWidget(this.nbWidget);
     document.addEventListener(
       'keydown',
