@@ -1,11 +1,9 @@
 import '@jupyterlab/application/style/index.css';
 import '@jupyterlab/theme-light-extension/style/index.css';
 import '@jupyterlab/notebook/style/index.css';
+import '@jupyterlab/notebook/style/base.css';
 import '../styles/notebook.css';
 import '../styles/index.css';
-//import '@jupyterlab/ui-components/style/index.css';
-
-import '@jupyterlab/notebook/style/base.css';
 
 import {
   NotebookPanel,
@@ -24,14 +22,9 @@ import { DocumentRegistry } from '@jupyterlab/docregistry';
 
 import { CommandRegistry } from '@phosphor/commands';
 
-// import { MathJaxTypesetter } from '@jupyterlab/mathjax2';
-
-// import { PageConfig } from '@jupyterlab/coreutils';
-
 import { 
   Widget,
   Panel,
-//  Layout,
   PanelLayout 
 } from "@phosphor/widgets";
 
@@ -270,7 +263,6 @@ function main(): void {
       manager: manager,
       opener
     });
-    //let commands = new CommandRegistry();
     let nbpanel = docManager.open("Untitled1.ipynb") as NotebookPanel;
     let widg = new NbWidget(nbpanel);
     let sup = new Panel();
