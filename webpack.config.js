@@ -1,5 +1,5 @@
 module.exports = {
-  entry: ['./clarity/static/index.js'],
+  entry: ['./lib/index.js'],
   output: {
     path:require('path').join(__dirname, 'clarity','static'),
     filename: 'bundle.js'
