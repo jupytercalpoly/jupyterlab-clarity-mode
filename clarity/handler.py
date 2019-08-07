@@ -11,14 +11,14 @@ class MyExtHandler(ExtensionHandler):
         self.write(html)
 
 
-class MyExtHandler2(ExtensionHandler):
+class PathHandler(ExtensionHandler):
     
     def get_template(self,name):
         return self.settings['clarity_jinja2_env'].get_template(name)
 
     def get(self, path):
         # Pass input text (path) to the html file.
-        html = self.render_template("page1.html", text=path)
+        html = self.render_template("path.html", path=path)
         self.write(html)
 
 class ErrorHandler(ExtensionHandler):

@@ -1,7 +1,7 @@
     
 {
   "compilerOptions": {
-    "outDir": "../clarity/static",
+    "outDir": "../lib",
     "allowSyntheticDefaultImports": true,
     "composite": true,
     "declaration": true,
