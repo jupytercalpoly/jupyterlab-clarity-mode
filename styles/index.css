@@ -1,4 +1,4 @@
-#clarity-container {
+.clarity-container {
   margin: 0px auto;
   padding: 0px 24px;
   max-width: 960px; /* Match max-width of notebook */

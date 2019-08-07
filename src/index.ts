@@ -4,6 +4,7 @@ import '@jupyterlab/notebook/style/index.css';
 import '@jupyterlab/notebook/style/base.css';
 import '../styles/notebook.css';
 import '../styles/index.css';
+import $ from 'jquery';
 
 import {
   NotebookPanel,
@@ -263,11 +264,15 @@ function main(): void {
       manager: manager,
       opener
     });
-    let nbpanel = docManager.open("Untitled1.ipynb") as NotebookPanel;
+    var current_dir = $('body').attr('id')
+    let nbpanel = docManager.open(current_dir) as NotebookPanel;
     let widg = new NbWidget(nbpanel);
     let sup = new Panel();
     sup.addWidget(widg);
     Widget.attach(sup, document.body);
+    window.addEventListener('resize', () => {
+      sup.update();
+    });
   });
 }
 
