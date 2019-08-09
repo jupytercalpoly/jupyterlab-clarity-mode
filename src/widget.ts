@@ -1,7 +1,6 @@
 import '@jupyterlab/application/style/index.css';
 import '@jupyterlab/theme-light-extension/style/index.css';
 import '@jupyterlab/notebook/style/index.css';
-import '@jupyterlab/notebook/style/base.css';
 import '../styles/notebook.css';
 import '../styles/index.css';
 
@@ -30,8 +29,6 @@ export class ClarityWidget extends Widget {
     this.addShortcuts(); 
     this.layout = new BoxLayout({spacing:0, direction:"top-to-bottom"});
     this.setup();
-    this._content;
-    this._toolbar;
   }
 
   setup = () => {
@@ -41,13 +38,8 @@ export class ClarityWidget extends Widget {
     this.addClass("jp-Document");
     this.addClass("jp-NotebookPanel");  
     let children = this.nbWidget.children();
-    const toolbar = (this._toolbar = children.next() as Toolbar);    
-    //let toolChild = tools.children();
-    //let tool = toolChild.next();
-    // while (!tool.node.className.includes("jp-KernelName")) {
-    //   tool = toolChild.next();
-    // } 
-    const content = (this._content = children.next() as Notebook);
+    const toolbar = children.next() as Toolbar;    
+    const content = children.next() as Notebook;
     BoxLayout.setStretch(toolbar, 0);
     BoxLayout.setStretch(content, 1);
     layout.addWidget(toolbar);
@@ -74,7 +66,6 @@ export class ClarityWidget extends Widget {
     const commandMode = '.jp-Notebook.jp-mod-commandMode:focus';
     const editMode = '.jp-Notebook.jp-mod-editMode';
     let bindings = [
-      // Tab / code completor shortcuts
       {
         selector: editModeWithCompleter,
         keys: ['Tab'],
@@ -85,20 +76,16 @@ export class ClarityWidget extends Widget {
         keys: ['Enter'],
         command: CmdIds.selectNotebook
       },
-      // General shortcut available at all times
       { selector: all, keys: ['Shift Enter'], command: CmdIds.runAndAdvance },
     ];
     const editModeShortcuts = [
-      // Shortcuts available in edit mode
       { keys: ['Ctrl Shift -'], command: CmdIds.split },
       { keys: ['Escape'], command: CmdIds.commandMode }
     ];
   
     const commandModeShortcuts = [
-      // Kernel related shortcuts
       { keys: ['I', 'I'], command: CmdIds.interrupt },
       { keys: ['0', '0'], command: CmdIds.restart },
-      // Cell operation shortcuts
       { keys: ['Enter'], command: CmdIds.editMode },
       { keys: ['Shift M'], command: CmdIds.merge },
       { keys: ['Shift K'], command: CmdIds.extendAbove },
@@ -107,12 +94,10 @@ export class ClarityWidget extends Widget {
       { keys: ['B'], command: CmdIds.insertBelow },
       { keys: ['R', 'R'], command: CmdIds.restartAndRunAll },
       { keys: ['D', 'D'], command: CmdIds.deleteCell },
-      // Cell movement shortcuts
       { keys: ['J'], command: CmdIds.selectBelow },
       { keys: ['ArrowDown'], command: CmdIds.selectBelow },
       { keys: ['K'], command: CmdIds.selectAbove },
       { keys: ['ArrowUp'], command: CmdIds.selectAbove },
-      // Other shortcuts
       { keys: ['Z'], command: CmdIds.undo },
       { keys: ['Y'], command: CmdIds.redo }
     ];
@@ -239,8 +224,6 @@ export class ClarityWidget extends Widget {
 
   private commands: CommandRegistry;
   private nbWidget: NotebookPanel;
-  private _toolbar: Toolbar;
-  private _content: Notebook;
 }
 
 const CmdIds = {
