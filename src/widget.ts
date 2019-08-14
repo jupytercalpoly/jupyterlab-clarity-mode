@@ -7,7 +7,8 @@ import '../styles/index.css';
 import {
   NotebookPanel,
   NotebookActions,
-  Notebook
+  Notebook,
+  ToolbarItems
 } from '@jupyterlab/notebook';
 
 import { CommandRegistry } from '@phosphor/commands';
@@ -18,6 +19,7 @@ import {
 } from "@phosphor/widgets";
 
 import { Toolbar } from '@jupyterlab/apputils';
+import { ClaritySidePanel } from './toolbar';
 
 export class ClarityWidget extends Widget {
 
@@ -27,7 +29,7 @@ export class ClarityWidget extends Widget {
     this.nbWidget = nbWidget;
     this.addCommands();
     this.addShortcuts(); 
-    this.layout = new BoxLayout({spacing:0, direction:"top-to-bottom"});
+    this.layout = new BoxLayout({direction:"left-to-right"});
     this.setup();
   }
 
@@ -38,12 +40,30 @@ export class ClarityWidget extends Widget {
     this.addClass("jp-Document");
     this.addClass("jp-NotebookPanel");  
     let children = this.nbWidget.children();
-    const toolbar = children.next() as Toolbar;    
+    const oldToolbar = children.next() as Toolbar;
+    oldToolbar;
+    let sidepanel = new ClaritySidePanel();
+    //let toolChild = oldToolbar.children();
+    //let tool = toolChild.next();
+    // while (!tool.node.className.includes("jp-KernelName")) {
+    //   console.log(tool);
+    //   sidepanel.toolbar.insertItem(tool);
+    //   tool = toolChild.next();
+    // } 
+    ToolbarItems.getDefaultItems(this.nbWidget);
     const content = children.next() as Notebook;
-    BoxLayout.setStretch(toolbar, 0);
+    BoxLayout.setStretch(sidepanel, 0);
     BoxLayout.setStretch(content, 1);
-    layout.addWidget(toolbar);
+    //BoxLayout.setSizeBasis(toolbar,6);
+    layout.addWidget(sidepanel);
     layout.addWidget(content);
+    let items = ToolbarItems.getDefaultItems(this.nbWidget);
+    let ignore = ['kernelName','kernelStatus','spacer','cellType']
+    items.forEach(({ name, widget: item }) => {
+      if (ignore.indexOf(name) < 0) {
+        sidepanel.toolbar.insertItem(item);
+      }
+    });
     window.setTimeout(function () {
       content.node.focus();
       content.activeCell.node.focus();
