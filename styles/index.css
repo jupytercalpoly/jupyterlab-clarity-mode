@@ -18,3 +18,39 @@
   width:30px;
   height:100%;
 }
+
+.testo  {
+  background-color: lightgreen;
+}
+
+.testo2 {
+  background-color: lightpink;
+  width:100%;
+  height: 200px;
+}
+
+.testo3 {
+  background-color: lightsalmon;
+  width:500px;
+  height:300px;
+}
+
+.clarity-header {
+  height:30px;
+  width:200px;
+  background-color:white;
+}
+
+.mainmenu{
+  height:100px;
+}
+
+.clarity-menu{
+  overflow:visible;
+}
+
+.clarity-icon{
+  right:3px;
+  top:3px;
+  background-position:top right;
+}

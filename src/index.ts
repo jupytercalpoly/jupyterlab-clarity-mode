@@ -17,6 +17,7 @@ import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { 
   Widget,
   Panel,
+  BoxLayout,
 } from "@phosphor/widgets";
 
 import {
@@ -26,6 +27,7 @@ import {
 } from '@jupyterlab/rendermime';
 
 import { ClarityWidget } from './widget';
+import { ClarityHeader } from './header';
 
 
 function main(): void {
@@ -54,7 +56,7 @@ function main(): void {
       contentFactory: contentFactory,
       mimeTypeService: editorServices.mimeTypeService
     });
-    docRegistry.addModelFactory(mFactory);
+    docRegistry.addModelFactory(mFactory)
     docRegistry.addWidgetFactory(wFactory);
     let docManager = new DocumentManager({
       registry: docRegistry,
@@ -64,12 +66,19 @@ function main(): void {
     var notebookPath = $('body').attr('id')
     let nbpanel = docManager.open(notebookPath) as NotebookPanel;
     let clarityWidget = new ClarityWidget(nbpanel);
+    let commands = clarityWidget.getCommands();
+    let parent = new Widget();
+    let layout = (parent.layout = new BoxLayout());
+    let header = new ClarityHeader(nbpanel, commands);
+    layout.addWidget(header);
+    layout.addWidget(clarityWidget);
     let panel = new Panel();
-    panel.addWidget(clarityWidget);
+    panel.addWidget(parent);
     Widget.attach(panel, document.body);
     window.addEventListener('resize', () => {
       panel.update();
     });
+    header.node.style.minHeight="200px";
   });
 }
 

@@ -29,7 +29,6 @@ export class ClarityToolbar extends Widget {
   }
 
   insertItem(widget: Widget) {
-    console.log(widget.node.classList);
     widget.addClass("jp-ToolbarButtonComponent");
     widget.addClass("clarity-toolbar-item");
     widget.addClass(TOOLBAR_ITEM_CLASS);

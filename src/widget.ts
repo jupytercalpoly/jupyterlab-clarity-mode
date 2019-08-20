@@ -21,6 +21,7 @@ import {
 import { Toolbar } from '@jupyterlab/apputils';
 import { ClaritySidePanel } from './toolbar';
 
+
 export class ClarityWidget extends Widget {
 
   constructor(nbWidget:NotebookPanel) {
@@ -33,6 +34,11 @@ export class ClarityWidget extends Widget {
     this.setup();
   }
 
+
+  getCommands = () => {
+    return this.commands;
+  }
+
   setup = () => {
     let layout = this.layout as BoxLayout;
     this.addClass("notebook-super-container"); 
@@ -40,8 +46,7 @@ export class ClarityWidget extends Widget {
     this.addClass("jp-Document");
     this.addClass("jp-NotebookPanel");  
     let children = this.nbWidget.children();
-    const oldToolbar = children.next() as Toolbar;
-    oldToolbar;
+    children.next() as Toolbar;
     let sidepanel = new ClaritySidePanel();
     //let toolChild = oldToolbar.children();
     //let tool = toolChild.next();
