@@ -37,15 +37,15 @@ export class ClarityMenu extends Widget {
     this.addClass("mainmenu");
     const layout = (this.layout = new PanelLayout());
     const menu = this.activate();
-    let logo = new Widget();
-    logo.addClass('jp-MainAreaPortraitIcon');
-    logo.addClass('jp-JupyterIcon');
-    logo.addClass('clarity-icon');
-    logo.id = 'jp-MainLogo';
-    layout.addWidget(logo);
-    logo.node.style.height='20px';
-    logo.node.style.width='inherit';
-    logo.node.style.margin='7px';
+    // let logo = new Widget();
+    // logo.addClass('jp-MainAreaPortraitIcon');
+    // logo.addClass('jp-JupyterIcon');
+    // logo.addClass('clarity-icon');
+    // logo.id = 'jp-MainLogo';
+    // layout.addWidget(logo);
+    // logo.node.style.height='20px';
+    // logo.node.style.width='inherit';
+    // logo.node.style.margin='7px';
     layout.addWidget(menu);
   }
 
@@ -79,7 +79,6 @@ export class ClarityMenu extends Widget {
     //     console.log('test');
     //   }
     // });
-    console.log(this.commands);
     filemenu.addItem({
       command: "notebook:save",
       args: {

@@ -1,43 +1,24 @@
 .clarity-container {
+  height:100vh;
   margin: 0px auto;
   padding: 0px 24px;
   max-width: 960px; 
 }
 
 .clarity-toolbar {
-  height: 80px;
-  min-width: 20px;
+  top:20px;
+  left:10px;
+  height: 90px;
+  width: 30px;
 }
 
 .clarity-toolbar-item {
-  height: 20px;
-  width:20px;
-}
-
-.spacer {
-  width:30px;
-  height:100%;
-}
-
-.testo  {
-  background-color: lightgreen;
-}
-
-.testo2 {
-  background-color: lightpink;
-  width:100%;
-  height: 200px;
-}
-
-.testo3 {
-  background-color: lightsalmon;
-  width:500px;
-  height:300px;
+  min-height: 26px;
+  min-width:30px;
 }
 
 .clarity-header {
-  height:30px;
-  width:200px;
+  min-height:100px;
   background-color:white;
 }
 

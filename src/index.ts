@@ -16,7 +16,6 @@ import { DocumentRegistry } from '@jupyterlab/docregistry';
 
 import { 
   Widget,
-  Panel,
   BoxLayout,
 } from "@phosphor/widgets";
 
@@ -27,6 +26,7 @@ import {
 } from '@jupyterlab/rendermime';
 
 import { ClarityWidget } from './widget';
+import '../styles/index.css';
 import { ClarityHeader } from './header';
 
 
@@ -67,18 +67,30 @@ function main(): void {
     let nbpanel = docManager.open(notebookPath) as NotebookPanel;
     let clarityWidget = new ClarityWidget(nbpanel);
     let commands = clarityWidget.getCommands();
-    let parent = new Widget();
-    let layout = (parent.layout = new BoxLayout());
-    let header = new ClarityHeader(nbpanel, commands);
-    layout.addWidget(header);
-    layout.addWidget(clarityWidget);
-    let panel = new Panel();
-    panel.addWidget(parent);
+    let header = new ClarityHeader(nbpanel,commands);
+    let toolbar = clarityWidget.getToolbar();
+
+    let panel = new Widget();
+    panel.addClass("clarity-container");
+    let rootLayout = new BoxLayout({direction:"top-to-bottom"});
+    panel.layout = rootLayout;
+    BoxLayout.setStretch(header,0);
+    BoxLayout.setStretch(clarityWidget,1);
+    rootLayout.addWidget(header);
+    rootLayout.addWidget(clarityWidget);
+
+    // let parent = new Widget();
+    // let layout = (parent.layout = new BoxLayout());
+    // let header = new ClarityHeader(nbpanel, commands);
+    // layout.addWidget(header);
+    // layout.addWidget(clarityWidget);
+    // let panel = new Panel();
+    // panel.addWidget(parent);
     Widget.attach(panel, document.body);
+    Widget.attach(toolbar, clarityWidget.node);
     window.addEventListener('resize', () => {
       panel.update();
     });
-    header.node.style.minHeight="200px";
   });
 }
 

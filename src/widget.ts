@@ -19,7 +19,7 @@ import {
 } from "@phosphor/widgets";
 
 import { Toolbar } from '@jupyterlab/apputils';
-import { ClaritySidePanel } from './toolbar';
+import { ClarityToolbar } from './toolbar';
 
 
 export class ClarityWidget extends Widget {
@@ -39,36 +39,29 @@ export class ClarityWidget extends Widget {
     return this.commands;
   }
 
+  getToolbar = () => {
+    let sidepanel = new ClarityToolbar();
+    let items = ToolbarItems.getDefaultItems(this.nbWidget);
+    let ignore = ['kernelName','kernelStatus','spacer','cellType']
+    items.forEach(({ name, widget: item }) => {
+      if (ignore.indexOf(name) < 0) {
+        sidepanel.insertItem(item);
+      }
+    });
+    return sidepanel;
+  }
+
   setup = () => {
     let layout = this.layout as BoxLayout;
-    this.addClass("notebook-super-container"); 
     this.addClass("jp-MainAreaWidget");
     this.addClass("jp-Document");
     this.addClass("jp-NotebookPanel");  
     let children = this.nbWidget.children();
     children.next() as Toolbar;
-    let sidepanel = new ClaritySidePanel();
-    //let toolChild = oldToolbar.children();
-    //let tool = toolChild.next();
-    // while (!tool.node.className.includes("jp-KernelName")) {
-    //   console.log(tool);
-    //   sidepanel.toolbar.insertItem(tool);
-    //   tool = toolChild.next();
-    // } 
-    ToolbarItems.getDefaultItems(this.nbWidget);
     const content = children.next() as Notebook;
-    BoxLayout.setStretch(sidepanel, 0);
+    content.addClass("mytestclass");
     BoxLayout.setStretch(content, 1);
-    //BoxLayout.setSizeBasis(toolbar,6);
-    layout.addWidget(sidepanel);
     layout.addWidget(content);
-    let items = ToolbarItems.getDefaultItems(this.nbWidget);
-    let ignore = ['kernelName','kernelStatus','spacer','cellType']
-    items.forEach(({ name, widget: item }) => {
-      if (ignore.indexOf(name) < 0) {
-        sidepanel.toolbar.insertItem(item);
-      }
-    });
     window.setTimeout(function () {
       content.node.focus();
       content.activeCell.node.focus();
@@ -192,6 +185,12 @@ export class ClarityWidget extends Widget {
         });
       }
     });
+    commands.addCommand(CmdIds.runAll, {
+      label: 'Run All Cells',
+      execute: () => {
+        NotebookActions.runAll(nbWidget.content, nbWidget.context.session);
+      }
+    });
     commands.addCommand(CmdIds.editMode, {
       label: 'Edit Mode',
       execute: () => {
@@ -263,6 +262,7 @@ const CmdIds = {
   switchKernel: 'notebook:switch-kernel',
   runAndAdvance: 'notebook-cells:run-and-advance',
   restartAndRunAll: 'notebook:restart-and-run-all',
+  runAll: 'notebook:run-all-cells',
   deleteCell: 'notebook-cells:delete',
   selectAbove: 'notebook-cells:select-above',
   selectBelow: 'notebook-cells:select-below',
@@ -275,5 +275,9 @@ const CmdIds = {
   split: 'notebook-cells:split',
   commandMode: 'notebook:command-mode',
   undo: 'notebook-cells:undo',
-  redo: 'notebook-cells:redo'
+  redo: 'notebook-cells:redo',
+  cut: 'notebook:cut-cell',
+  copy: 'notebook:copy-cell',
+  pasteAbove: 'notebook:paste-cell-above',
+  pasteBelow: 'notebook:paste-cell-below'
 };
