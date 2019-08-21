@@ -26,9 +26,8 @@ import {
 } from '@jupyterlab/rendermime';
 
 import { ClarityWidget } from './widget';
-import '../styles/index.css';
 import { ClarityHeader } from './header';
-
+import '../styles/index.css';
 
 function main(): void {
   let manager = new ServiceManager();
@@ -79,13 +78,6 @@ function main(): void {
     rootLayout.addWidget(header);
     rootLayout.addWidget(clarityWidget);
 
-    // let parent = new Widget();
-    // let layout = (parent.layout = new BoxLayout());
-    // let header = new ClarityHeader(nbpanel, commands);
-    // layout.addWidget(header);
-    // layout.addWidget(clarityWidget);
-    // let panel = new Panel();
-    // panel.addWidget(parent);
     Widget.attach(panel, document.body);
     Widget.attach(toolbar, clarityWidget.node);
     window.addEventListener('resize', () => {

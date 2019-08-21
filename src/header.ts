@@ -1,11 +1,15 @@
-import {Widget, PanelLayout, Menu,MenuBar} from '@phosphor/widgets';
-import {NotebookPanel} from '@jupyterlab/notebook';
+import { 
+  Widget, 
+  PanelLayout, 
+  Menu,
+  MenuBar,
+  BoxLayout
+} from '@phosphor/widgets';
 
-//import { showDialog, Dialog } from '@jupyterlab/apputils'
-
-//import { URLExt } from '@jupyterlab/coreutils';
-
-//import { ServerConnection } from '@jupyterlab/services';
+import { 
+  NotebookPanel,
+  ToolbarItems
+ } from '@jupyterlab/notebook';
 
 import { CommandRegistry } from '@phosphor/commands';
 
@@ -16,14 +20,40 @@ export class ClarityHeader extends Widget {
     const layout = (this.layout = new PanelLayout());
     this.addClass("clarity-header");
     this.nbWidget = nbWidget;
+    this.addTitle();
+    this.addRunAll(commands);
+    this.addKernelStatus();
     let menu = new ClarityMenu(nbWidget, commands);
     layout.addWidget(menu);
-    //this.generateInfo();
   }
 
-  generateInfo = () => {
+  addTitle = () => {
     let title:string=this.nbWidget.title.label;
     this.node.innerText = title;
+  }
+
+  addRunAll = (commands:CommandRegistry) => {
+    let layout = this.layout as PanelLayout;
+    let runAll = new RunAll(commands);
+    layout.addWidget(runAll);
+  }
+
+  addKernelStatus = () => {
+    let kernelWidg = new Widget();
+    kernelWidg.addClass("clarity-kernel-wid");
+    let klayout = (kernelWidg.layout = new BoxLayout({direction:"left-to-right"}));
+    let layout = this.layout as PanelLayout;
+    let items = ToolbarItems.getDefaultItems(this.nbWidget);
+    let ignore = ['kernelName','kernelStatus']
+    items.forEach(({ name, widget: item }) => {
+      if (ignore.indexOf(name) >= 0) {
+        if ("kernelStatus".indexOf(name) >=0) {
+          item.addClass("clarity-kernel");
+        }
+        klayout.addWidget(item);
+      }
+    });
+    layout.addWidget(kernelWidg);
   }
 
   private nbWidget:NotebookPanel;
@@ -37,137 +67,66 @@ export class ClarityMenu extends Widget {
     this.addClass("mainmenu");
     const layout = (this.layout = new PanelLayout());
     const menu = this.activate();
-    // let logo = new Widget();
-    // logo.addClass('jp-MainAreaPortraitIcon');
-    // logo.addClass('jp-JupyterIcon');
-    // logo.addClass('clarity-icon');
-    // logo.id = 'jp-MainLogo';
-    // layout.addWidget(logo);
-    // logo.node.style.height='20px';
-    // logo.node.style.width='inherit';
-    // logo.node.style.margin='7px';
     layout.addWidget(menu);
   }
 
   activate = () => {
-    //let commands = this.commands;
-    //MenuBar
     let menu = new MenuBar();
     menu.addClass('clarity-menu');
     menu.id = 'jp-MainMenu';
-
-    // Create the application menus.
-    //this.createEditMenu(menu.editMenu);
-    menu = this.createFileMenu(menu);
-    // this.createKernelMenu(app, menu.kernelMenu);
-    // this.createRunMenu(app, menu.runMenu);
-    // this.createSettingsMenu(app, menu.settingsMenu);
-    // this.createViewMenu(app, menu.viewMenu);
+    menu = this.createMenus(menu);
     return menu;
   }
 
-  createFileMenu = (
-    menu: MenuBar
-  ) => {
+  addLogo = () => {
+    let layout = this.layout as PanelLayout;
+    let logo = new Widget();
+    logo.addClass('jp-MainAreaPortraitIcon');
+    logo.addClass('jp-JupyterIcon');
+    logo.addClass('clarity-icon');
+    logo.id = 'jp-MainLogo';
+    layout.addWidget(logo);
+  }
 
+  createMenus = (menu: MenuBar) => {
     const filemenu = new Menu({ commands: this.commands });
     filemenu.title.label = "File";
-    // let commands = this.commands as CommandRegistry;
-    // commands.addCommand("docmanager:save-as", {
-    //   label: 'Save as',
-    //   execute: () => {
-    //     console.log('test');
-    //   }
-    // });
-    filemenu.addItem({
-      command: "notebook:save",
-      args: {
-        insertSpaces: false,
-        size: 4,
-        name: 'Indent with Tab'
-      },
-    });
-    // filemenu.addGroup([
-    //   {
-    //     command: firstCommandID,
-    //   },
-    //   {
-    //     command: secondCommandID,
-    //   }
-    // ], 40 /* rank */);
+    filemenu.addItem({command: "notebook:save"});
     menu.addMenu(filemenu);
     const editmenu = new Menu({ commands: this.commands });
     editmenu.title.label = "Edit";
-    editmenu.addItem({
-      command: "notebook-cells:undo",
-      args: {
-        insertSpaces: false,
-        size: 4,
-        name: 'Indent with Tab'
-      },
-    });
+    editmenu.addItem({command: "notebook-cells:undo"});
+    editmenu.addItem({command: "notebook-cells:redo"});
     menu.addMenu(editmenu);
-    const viewmenu = new Menu({ commands: this.commands });
-    viewmenu.title.label = "View";
-    menu.addMenu(viewmenu);
-  
-    // Add the new group
-    // const newGroup = [
-    //   { type: 'submenu' as Menu.ItemType, submenu: menu.newMenu.menu },
-    //   { command: 'docmanager:rename' }
-    // ];
+    const settingsmenu = new Menu({ commands: this.commands });
+    settingsmenu.title.label = "Settings";
+    menu.addMenu(settingsmenu);
+    const helpmenu = new Menu({ commands: this.commands });
+    helpmenu.title.label = "Help";
+    menu.addMenu(helpmenu);
 
-  
-    // const openGroup = [{ command: 'filebrowser:open-path' }];
-  
-    // const newViewGroup = [
-    //   { command: 'docmanager:clone' },
-    //   { command: CommandIDs.createConsole }
-    // ].filter(item => !!item);
-  
-    // // Add the close group
-    // const closeGroup = [
-    //   'application:close',
-    //   'filemenu:close-and-cleanup',
-    //   'application:close-all'
-    // ].map(command => {
-    //   return { command };
-    // });
-  
-    // // Add save group.
-    // const saveGroup = [
-    //   'docmanager:save',
-    //   'docmanager:save-as',
-    //   'docmanager:save-all'
-    // ].map(command => {
-    //   return { command };
-    // });
-  
-    // // Add the re group.
-    // const reGroup = [
-    //   'docmanager:reload',
-    //   'docmanager:restore-checkpoint',
-    //   'docmanager:rename'
-    // ].map(command => {
-    //   return { command };
-    // });
-    // const printGroup = [{ command: 'apputils:print' }];
-  
-    //menu.addGroup(newGroup, 0);
-    // menu.addGroup(openGroup, 1);
-    // menu.addGroup(newViewGroup, 2);
-    // menu.addGroup(closeGroup, 3);
-    // menu.addGroup(saveGroup, 4);
-    // menu.addGroup(reGroup, 5);
-    // menu.addGroup(printGroup, 98);
     return menu;
   }
-  
 
-  private commands: CommandRegistry;
   //private nbWidget: NotebookPanel;
+  private commands: CommandRegistry;
 }
 
+export class RunAll extends Widget {
+  constructor(commands:CommandRegistry){
+    super();
+    this.commands = commands;
+    this.addClass("clarity-runall");
+    this.node.innerText = "run all cells";
+    this.node.addEventListener('mousedown', this.onClick, true);
+  }
+
+  onClick = ()=> {
+    this.commands.execute("notebook:run-all-cells");
+  }
+
+  private commands:CommandRegistry;
+}
 
 
 export namespace CommandIDs {
@@ -190,10 +149,6 @@ export namespace CommandIDs {
   export const closeAndCleanup = 'filemenu:close-and-cleanup';
 
   export const createConsole = 'filemenu:create-console';
-
-  export const shutdown = 'filemenu:shutdown';
-
-  export const logout = 'filemenu:logout';
 
   export const openKernel = 'kernelmenu:open';
 
@@ -228,13 +183,6 @@ export namespace CommandIDs {
   export const runAbove = 'runmenu:run-above';
 
   export const runBelow = 'runmenu:run-below';
-
-  export const openTabs = 'tabsmenu:open';
-
-  export const activateById = 'tabsmenu:activate-by-id';
-
-  export const activatePreviouslyUsedTab =
-    'tabsmenu:activate-previously-used-tab';
 
   export const openSettings = 'settingsmenu:open';
 
