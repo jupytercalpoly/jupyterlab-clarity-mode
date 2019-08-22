@@ -1,5 +1,59 @@
 .clarity-container {
+  height:100vh;
   margin: 0px auto;
   padding: 0px 24px;
   max-width: 960px; 
+}
+
+.clarity-toolbar {
+  top:20px;
+  left:15px;
+  height: 90px;
+  width: 30px;
+  border-radius:8px;
+}
+
+.clarity-toolbar-item {
+  min-height: 26px;
+  min-width:30px;
+}
+
+.clarity-header {
+  min-height:100px;
+  background-color:white;
+}
+
+.clarity-kernel-wid {
+  max-width:80px;
+}
+
+.clarity-runall {
+  max-width:80px;
+  min-height:22px;
+  background-color:aquamarine;
+}
+
+.clarity-kernel {
+  min-height:20px;
+  max-width:20px;
+  background-size:20px;
+}
+
+/* THIS IS A REAL CLASS DONT DELETE */
+.mytestclass {
+  padding:60px;
+}
+
+.mainmenu{
+  height:100px;
+}
+
+.clarity-menu{
+  overflow:visible;
+}
+
+.clarity-icon{
+  right:3px;
+  top:3px;
+  background-position:top right;
 }

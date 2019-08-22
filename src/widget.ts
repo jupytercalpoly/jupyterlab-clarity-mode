@@ -7,7 +7,8 @@ import '../styles/index.css';
 import {
   NotebookPanel,
   NotebookActions,
-  Notebook
+  Notebook,
+  ToolbarItems
 } from '@jupyterlab/notebook';
 
 import { CommandRegistry } from '@phosphor/commands';
@@ -18,6 +19,8 @@ import {
 } from "@phosphor/widgets";
 
 import { Toolbar } from '@jupyterlab/apputils';
+import { ClarityToolbar } from './toolbar';
+
 
 export class ClarityWidget extends Widget {
 
@@ -27,22 +30,37 @@ export class ClarityWidget extends Widget {
     this.nbWidget = nbWidget;
     this.addCommands();
     this.addShortcuts(); 
-    this.layout = new BoxLayout({spacing:0, direction:"top-to-bottom"});
+    this.layout = new BoxLayout({direction:"left-to-right"});
     this.setup();
+  }
+
+
+  getCommands = () => {
+    return this.commands;
+  }
+
+  getToolbar = () => {
+    let sidepanel = new ClarityToolbar();
+    let items = ToolbarItems.getDefaultItems(this.nbWidget);
+    let ignore = ['kernelName','kernelStatus','spacer','cellType']
+    items.forEach(({ name, widget: item }) => {
+      if (ignore.indexOf(name) < 0) {
+        sidepanel.insertItem(item);
+      }
+    });
+    return sidepanel;
   }
 
   setup = () => {
     let layout = this.layout as BoxLayout;
-    this.addClass("notebook-super-container"); 
     this.addClass("jp-MainAreaWidget");
     this.addClass("jp-Document");
     this.addClass("jp-NotebookPanel");  
     let children = this.nbWidget.children();
-    const toolbar = children.next() as Toolbar;    
+    children.next() as Toolbar;
     const content = children.next() as Notebook;
-    BoxLayout.setStretch(toolbar, 0);
+    content.addClass("mytestclass");
     BoxLayout.setStretch(content, 1);
-    layout.addWidget(toolbar);
     layout.addWidget(content);
     window.setTimeout(function () {
       content.node.focus();
@@ -167,6 +185,12 @@ export class ClarityWidget extends Widget {
         });
       }
     });
+    commands.addCommand(CmdIds.runAll, {
+      label: 'Run All Cells',
+      execute: () => {
+        NotebookActions.runAll(nbWidget.content, nbWidget.context.session);
+      }
+    });
     commands.addCommand(CmdIds.editMode, {
       label: 'Edit Mode',
       execute: () => {
@@ -238,6 +262,7 @@ const CmdIds = {
   switchKernel: 'notebook:switch-kernel',
   runAndAdvance: 'notebook-cells:run-and-advance',
   restartAndRunAll: 'notebook:restart-and-run-all',
+  runAll: 'notebook:run-all-cells',
   deleteCell: 'notebook-cells:delete',
   selectAbove: 'notebook-cells:select-above',
   selectBelow: 'notebook-cells:select-below',
@@ -250,5 +275,9 @@ const CmdIds = {
   split: 'notebook-cells:split',
   commandMode: 'notebook:command-mode',
   undo: 'notebook-cells:undo',
-  redo: 'notebook-cells:redo'
+  redo: 'notebook-cells:redo',
+  cut: 'notebook:cut-cell',
+  copy: 'notebook:copy-cell',
+  pasteAbove: 'notebook:paste-cell-above',
+  pasteBelow: 'notebook:paste-cell-below'
 };
