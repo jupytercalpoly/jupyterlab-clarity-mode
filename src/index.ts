@@ -55,7 +55,7 @@ function main(): void {
       contentFactory: contentFactory,
       mimeTypeService: editorServices.mimeTypeService
     });
-    docRegistry.addModelFactory(mFactory)
+    docRegistry.addModelFactory(mFactory);
     docRegistry.addWidgetFactory(wFactory);
     let docManager = new DocumentManager({
       registry: docRegistry,
