@@ -1,7 +1,6 @@
 import '@jupyterlab/application/style/index.css';
 import '@jupyterlab/theme-light-extension/style/index.css';
 import '@jupyterlab/notebook/style/index.css';
-import '../styles/notebook.css';
 import '../styles/index.css';
 
 import {
@@ -11,6 +10,12 @@ import {
   ToolbarItems
 } from '@jupyterlab/notebook';
 
+import { IDocumentWidget } from '@jupyterlab/docregistry';
+
+import { CodeMirrorEditor } from '@jupyterlab/codemirror';
+
+import { FileEditor } from '@jupyterlab/fileeditor';
+
 import { CommandRegistry } from '@phosphor/commands';
 
 import { 
@@ -18,17 +23,17 @@ import {
   BoxLayout
 } from "@phosphor/widgets";
 
-import { Toolbar } from '@jupyterlab/apputils';
+import { Toolbar, MainAreaWidget } from '@jupyterlab/apputils';
 import { ClarityToolbar } from './toolbar';
 
 
 export class ClarityWidget extends Widget {
 
-  constructor(nbWidget:NotebookPanel) {
+  constructor(nbWidget:NotebookPanel, docWidget: IDocumentWidget) {
     super();
     this.commands = new CommandRegistry();
     this.nbWidget = nbWidget;
-    this.addCommands();
+    this.addCommands(docWidget);
     this.addShortcuts(); 
     this.layout = new BoxLayout({direction:"left-to-right"});
     this.setup();
@@ -59,7 +64,7 @@ export class ClarityWidget extends Widget {
     let children = this.nbWidget.children();
     children.next() as Toolbar;
     const content = children.next() as Notebook;
-    content.addClass("mytestclass");
+    content.addClass("notebook-padding");
     BoxLayout.setStretch(content, 1);
     layout.addWidget(content);
     window.setTimeout(function () {
@@ -129,7 +134,7 @@ export class ClarityWidget extends Widget {
     return commands;
   }
 
-  addCommands = () => {
+  addCommands = (docWidget: IDocumentWidget) => {
     let commands = this.commands;
     let nbWidget = this.nbWidget;
     commands.addCommand(CmdIds.invokeNotebook, {
@@ -239,10 +244,29 @@ export class ClarityWidget extends Widget {
       label: 'Redo',
       execute: () => NotebookActions.redo(nbWidget.content)
     });
+    commands.addCommand(CmdIds.pasteBelow, {
+      label: 'Paste',
+      execute: () => NotebookActions.paste(nbWidget.content, 'below')
+    });
+    commands.addCommand(CmdIds.copy, {
+      label: 'Copy',
+      execute: () => NotebookActions.copy(nbWidget.content)
+    });
     commands.addCommand(CmdIds.deleteCell, {
       label: 'Delete Cell',
       execute: () => NotebookActions.deleteCells(nbWidget.content)
     });
+    commands.addCommand(CmdIds.find, {
+      label: 'Find...',
+      execute: () => {
+        let nb = nbWidget as MainAreaWidget;
+        let content = nb.content as FileEditor;
+        let editor = content.editor as CodeMirrorEditor;
+        console.log(content.editor);
+        //let editor = nbWidget.content.activeCell.contentFactory.editorFactory.caller as CodeMirrorEditor;
+        editor.execCommand('find');
+      }
+    })
     return commands;
   }
 
@@ -278,6 +302,6 @@ const CmdIds = {
   redo: 'notebook-cells:redo',
   cut: 'notebook:cut-cell',
   copy: 'notebook:copy-cell',
-  pasteAbove: 'notebook:paste-cell-above',
-  pasteBelow: 'notebook:paste-cell-below'
+  pasteBelow: 'notebook:paste-cell-below',
+  find: 'notebook:find'
 };

@@ -19,41 +19,63 @@
 }
 
 .clarity-header {
-  min-height:100px;
+  min-height:80px;
   background-color:white;
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
 }
 
-.clarity-kernel-wid {
-  max-width:80px;
+.kernel-2 {
+  position: absolute;
+  right: 17px;
+  top: 10px;
 }
 
 .clarity-runall {
-  max-width:80px;
+  right:10px;
+  top: 10px;
+  max-width:100px;
   min-height:22px;
-  background-color:aquamarine;
+  color: var(--jp-brand-color1);
 }
 
 .clarity-kernel {
-  min-height:20px;
-  max-width:20px;
-  background-size:20px;
+  min-height:15px;
+  max-width:15px;
+  min-width: 15px;
+  background-size:15px;
+  position: absolute;
+  right: 3px;
+  top: 15px;
 }
 
-/* THIS IS A REAL CLASS DONT DELETE */
-.mytestclass {
-  padding:60px;
-}
-
-.mainmenu{
-  height:100px;
-}
-
-.clarity-menu{
-  overflow:visible;
+.my-header {
+  font-size: 1.6em;
+  font-weight: 600;
+  left: 10px;
+  top: 5px;
+  position: absolute;
 }
 
 .clarity-icon{
   right:3px;
   top:3px;
   background-position:top right;
+}
+
+.notebook-super-container {
+  position: relative;
+  height: 100vh;
+  box-shadow: var(--jp-elevation-z4);
+}
+
+.notebook-padding {
+  padding:55px;
+}
+
+.jp-Notebook.jp-mod-scrollPastEnd::after {
+    display: block;
+    content: '';
+    min-height: 55px;
 }

@@ -63,10 +63,11 @@ function main(): void {
       opener
     });
     var notebookPath = $('body').attr('id')
+    let docWidget = docManager.open(notebookPath);
     let nbpanel = docManager.open(notebookPath) as NotebookPanel;
-    let clarityWidget = new ClarityWidget(nbpanel);
+    let clarityWidget = new ClarityWidget(nbpanel, docWidget);
     let commands = clarityWidget.getCommands();
-    let header = new ClarityHeader(nbpanel,commands);
+    let header = new ClarityHeader(nbpanel,commands,docManager);
     let toolbar = clarityWidget.getToolbar();
 
     let panel = new Widget();
