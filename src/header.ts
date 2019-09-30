@@ -3,7 +3,6 @@ import {
   PanelLayout, 
   Menu,
   MenuBar,
-  BoxLayout
 } from '@phosphor/widgets';
 
 import { 
@@ -13,58 +12,74 @@ import {
 
 import { CommandRegistry } from '@phosphor/commands';
 
+import { DocumentManager } from '@jupyterlab/docmanager';
 
 export class ClarityHeader extends Widget {
-  constructor(nbWidget:NotebookPanel, commands: CommandRegistry) {
+  constructor(nbWidget:NotebookPanel, commands: CommandRegistry, docManager: DocumentManager) {
     super();
-    const layout = (this.layout = new PanelLayout());
     this.addClass("clarity-header");
     this.nbWidget = nbWidget;
-    this.addTitle();
-    this.addRunAll(commands);
-    this.addKernelStatus();
-    let menu = new ClarityMenu(nbWidget, commands);
+    let run = this.addRunAll(commands);
+    let div1 = document.createElement("div")
+    div1.appendChild(run.node);
+    let items = ToolbarItems.getDefaultItems(this.nbWidget);
+    let ignore = ['kernelName','kernelStatus']
+    let div2 = document.createElement("div");
+    let title = this.addTitle();
+    let menu = new ClarityMenu(nbWidget, commands, docManager);
+    div2.appendChild(title);
+    this.node.appendChild(div2);
+    this.node.appendChild(div1);
+    const layout = (this.layout = new PanelLayout());
     layout.addWidget(menu);
+    items.forEach(({ name, widget: item }) => {
+      if (ignore.indexOf(name) >= 0) {
+        if ("kernelStatus".indexOf(name) >=0) {
+          item.addClass("clarity-kernel");
+        } else {
+          item.addClass("kernel-2");
+        }
+        layout.addWidget(item);
+      }
+    });
   }
 
   addTitle = () => {
     let title:string=this.nbWidget.title.label;
-    this.node.innerText = title;
+    let text = document.createElement('p');
+    text.className = "my-header";
+    let node = document.createTextNode(title);
+    text.appendChild(node);
+    return text;
   }
 
   addRunAll = (commands:CommandRegistry) => {
-    let layout = this.layout as PanelLayout;
     let runAll = new RunAll(commands);
-    layout.addWidget(runAll);
+    return runAll;
   }
 
   addKernelStatus = () => {
-    let kernelWidg = new Widget();
-    kernelWidg.addClass("clarity-kernel-wid");
-    let klayout = (kernelWidg.layout = new BoxLayout({direction:"left-to-right"}));
-    let layout = this.layout as PanelLayout;
     let items = ToolbarItems.getDefaultItems(this.nbWidget);
     let ignore = ['kernelName','kernelStatus']
     items.forEach(({ name, widget: item }) => {
       if (ignore.indexOf(name) >= 0) {
         if ("kernelStatus".indexOf(name) >=0) {
           item.addClass("clarity-kernel");
+          return item;
         }
-        klayout.addWidget(item);
       }
     });
-    layout.addWidget(kernelWidg);
   }
 
   private nbWidget:NotebookPanel;
 }
 
 export class ClarityMenu extends Widget {
-  constructor(nbWidget: NotebookPanel, commands: CommandRegistry) {
+  constructor(nbWidget: NotebookPanel, commands: CommandRegistry, docManager: DocumentManager) {
     super();
-    nbWidget;
+    this.nbWidget = nbWidget;
     this.commands = commands;
-    this.addClass("mainmenu");
+    this.docManager = docManager;
     const layout = (this.layout = new PanelLayout());
     const menu = this.activate();
     layout.addWidget(menu);
@@ -72,7 +87,6 @@ export class ClarityMenu extends Widget {
 
   activate = () => {
     let menu = new MenuBar();
-    menu.addClass('clarity-menu');
     menu.id = 'jp-MainMenu';
     menu = this.createMenus(menu);
     return menu;
@@ -89,26 +103,38 @@ export class ClarityMenu extends Widget {
   }
 
   createMenus = (menu: MenuBar) => {
+    let commands = this.commands as CommandRegistry;
+    commands.addCommand('docmanager:rename', {
+      label: 'Rename',
+      mnemonic: 0,
+      execute: () => {
+        this.docManager;
+        // console.log(this.nbWidget.context.path);
+        // const oldPath = PathExt.join(this._model.path, original);
+        // const newPath = PathExt.join(this._model.path, newName);
+        // this.docManager.rename(oldPath, newPath);
+      }
+    });
     const filemenu = new Menu({ commands: this.commands });
     filemenu.title.label = "File";
     filemenu.addItem({command: "notebook:save"});
+    filemenu.addItem({command:'docmanager:rename'});
     menu.addMenu(filemenu);
     const editmenu = new Menu({ commands: this.commands });
     editmenu.title.label = "Edit";
     editmenu.addItem({command: "notebook-cells:undo"});
     editmenu.addItem({command: "notebook-cells:redo"});
+    editmenu.addItem({command: "notebook:copy-cell"});
+    editmenu.addItem({command: "notebook:paste-cell-below"});
+    editmenu.addItem({command: "notebook:find"});
     menu.addMenu(editmenu);
-    const settingsmenu = new Menu({ commands: this.commands });
-    settingsmenu.title.label = "Settings";
-    menu.addMenu(settingsmenu);
-    const helpmenu = new Menu({ commands: this.commands });
-    helpmenu.title.label = "Help";
-    menu.addMenu(helpmenu);
+
 
     return menu;
   }
 
-  //private nbWidget: NotebookPanel;
+  private nbWidget: NotebookPanel;
+  private docManager: DocumentManager;
   private commands: CommandRegistry;
 }
 
@@ -117,7 +143,7 @@ export class RunAll extends Widget {
     super();
     this.commands = commands;
     this.addClass("clarity-runall");
-    this.node.innerText = "run all cells";
+    this.node.innerText = "▶ Run All Cells";
     this.node.addEventListener('mousedown', this.onClick, true);
   }
 
@@ -189,4 +215,6 @@ export namespace CommandIDs {
   export const openHelp = 'helpmenu:open';
 
   export const openFirst = 'mainmenu:open-first';
+
+  export const rename = 'docmanager:rename';
 }
