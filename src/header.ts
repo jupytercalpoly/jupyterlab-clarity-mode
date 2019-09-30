@@ -109,7 +109,7 @@ export class ClarityMenu extends Widget {
       mnemonic: 0,
       execute: () => {
         this.docManager;
-        // console.log(this.nbWidget.context.path);
+        this.nbWidget.context.path;
         // const oldPath = PathExt.join(this._model.path, original);
         // const newPath = PathExt.join(this._model.path, newName);
         // this.docManager.rename(oldPath, newPath);
