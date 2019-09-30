@@ -1,18 +1,15 @@
 # JupyterLab Clarity Mode
- Clarity mode is a document-driven mode of JupyterLab that reveals relevant notebook tools in context.
+Clarity mode is a single-notebook interface built with existing JupyterLab components.
 
-Clarity fights the perception of clutter, leaving you with more headspace for other things like this 🔥 **carne asada recipe**:
+To install:
 
-* 2 lb hanger steak
-* 4 cloves garlic minced
-* 1/2 cup cilantro
-* 1 lime zest
-* Juice of one lime
-* Juice of one orange
-* Teaspoon of cumin
-* Salt and pepper to taste
-* 1/2 minced onion
-* 3/4 cup olive oil
-* 1 tsp apple cider vinegar
-
-Mix marinade. Put steak in marinade 90mins-up to 4hours. Grill on medium-high heat 4-6 mins per side.
+1. Clone this repository
+2. Ensure you have installed jupyter-server (```pip install jupyter-server```)
+3. Run 
+```
+pip install -e .
+npm install
+npm run build
+jupyter clarity
+```
+4. In the URL, enter /clarity/path + the path to a notebook, e.g. localhost:8888/clarity/path/mynotebook.ipynb 
