@@ -14,9 +14,6 @@ import { CommandRegistry } from '@phosphor/commands';
 
 import { DocumentManager } from '@jupyterlab/docmanager';
 
-//import { PathExt } from '@jupyterlab/coreutils';
-
-
 export class ClarityHeader extends Widget {
   constructor(nbWidget:NotebookPanel, commands: CommandRegistry, docManager: DocumentManager) {
     super();
@@ -27,7 +24,6 @@ export class ClarityHeader extends Widget {
     div1.appendChild(run.node);
     let items = ToolbarItems.getDefaultItems(this.nbWidget);
     let ignore = ['kernelName','kernelStatus']
-    //div1.appendChild(kernel.node);
     let div2 = document.createElement("div");
     let title = this.addTitle();
     let menu = new ClarityMenu(nbWidget, commands, docManager);
@@ -54,25 +50,15 @@ export class ClarityHeader extends Widget {
     text.className = "my-header";
     let node = document.createTextNode(title);
     text.appendChild(node);
-    // this.node.insertBefore(text, thing.node);
-    // console.dir(this);
-    //this.node.createTextNode(title);
-    //this.node.innerText = title;
     return text;
   }
 
   addRunAll = (commands:CommandRegistry) => {
-    //let layout = this.layout as PanelLayout;
     let runAll = new RunAll(commands);
     return runAll;
-    //layout.addWidget(runAll);
   }
 
   addKernelStatus = () => {
-    //let kernelWidg = new Widget();
-    //kernelWidg.addClass("clarity-kernel-wid");
-    //let klayout = (kernelWidg.layout = new BoxLayout({direction:"left-to-right"}));
-    //let layout = this.layout as PanelLayout;
     let items = ToolbarItems.getDefaultItems(this.nbWidget);
     let ignore = ['kernelName','kernelStatus']
     items.forEach(({ name, widget: item }) => {
@@ -81,30 +67,8 @@ export class ClarityHeader extends Widget {
           item.addClass("clarity-kernel");
           return item;
         }
-        //klayout.addWidget(item);
       }
     });
-    //layout.addWidget(kernelWidg);
-   // return kernelWidg;
-  }
-  addKernelStatus2 = () => {
-    //let kernelWidg = new Widget();
-    //kernelWidg.addClass("clarity-kernel-wid");
-    //let klayout = (kernelWidg.layout = new BoxLayout({direction:"left-to-right"}));
-    //let layout = this.layout as PanelLayout;
-    let items = ToolbarItems.getDefaultItems(this.nbWidget);
-    let ignore = ['kernelName','kernelStatus']
-    items.forEach(({ name, widget: item }) => {
-      if (ignore.indexOf(name) >= 0) {
-        if ("kernelName".indexOf(name) >=0) {
-          item.addClass("clarity-kernel");
-          return item;
-        }
-        //klayout.addWidget(item);
-      }
-    });
-    //layout.addWidget(kernelWidg);
-   // return kernelWidg;
   }
 
   private nbWidget:NotebookPanel;
@@ -145,7 +109,7 @@ export class ClarityMenu extends Widget {
       mnemonic: 0,
       execute: () => {
         this.docManager;
-        console.log(this.nbWidget.context.path);
+        // console.log(this.nbWidget.context.path);
         // const oldPath = PathExt.join(this._model.path, original);
         // const newPath = PathExt.join(this._model.path, newName);
         // this.docManager.rename(oldPath, newPath);

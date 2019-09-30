@@ -262,8 +262,6 @@ export class ClarityWidget extends Widget {
         let nb = nbWidget as MainAreaWidget;
         let content = nb.content as FileEditor;
         let editor = content.editor as CodeMirrorEditor;
-        console.log(content.editor);
-        //let editor = nbWidget.content.activeCell.contentFactory.editorFactory.caller as CodeMirrorEditor;
         editor.execCommand('find');
       }
     })
